@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product_Merchant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="relative overflow-x-auto p-5">
+    <button onclick="CreatePDFfromHTML()" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Exporter
+    </button>
+    <table id="to-export" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <th class="px-6 py-3">name</th>
+            <th class="px-6 py-3">price</th>
+            <th class="px-6 py-3">currency</th>
+            <th class="px-6 py-3">taxe</th>
+            <th class="px-6 py-3">expired_at</th>
+            <th class="px-6 py-3">produced_by</th>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" th:each="product: ${products}">
+                <td class="px-6 py-4" th:text="${product.name}"></td>
+                <td class="px-6 py-4" th:text="${product.price}"></td>
+                <td class="px-6 py-4" th:text="${product.currency}"></td>
+                <td class="px-6 py-4" th:text="${product.taxe}"></td>
+                <td class="px-6 py-4" th:text="${product.expired_at}"></td>
+                <td class="px-6 py-4" th:text="${product.produced_by}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script>
+    async function CreatePDFfromHTML() {
+    var HTML_Width = $("#to-export").width();
+    var HTML_Height = $("#to-export").height();
+    var top_left_margin = 15;
+    var PDF_Width = HTML_Width + (top_left_margin * 2);
+    var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+    var canvas_image_width = HTML_Width;
+    var canvas_image_height = HTML_Height;
+
+    var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+
+    var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+    await pdf.html($("#to-export")[0], {
+        margin: 25
+    });
+    pdf.save("expôrt.pdf");
+}
+</script>
+</body>
+</html>
